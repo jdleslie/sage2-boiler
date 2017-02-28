@@ -21,7 +21,7 @@ The boiler has two RJ45 ports
 
 | Port  | Protocol | Purpose |
 |-------|----------|---------|
-| White | 24VAC [EnviraCom](http://www.google.com/patents/US20080112492) | Suitable for connection to [Sage Zone Control](http://www.usboiler.net/product/sage-zone-control-circulator-panel) panels and a specfic model of Honeywell thermostat ([TH9421C1004](https://customer.honeywell.com/en-US/Pages/Product.aspx?cat=HonECC+Catalog&pid=th9421c1004/U), now obsolete and not available for sale) |
+| White | [EnviraCom](http://www.google.com/patents/US20080112492) | Suitable for connection to [Sage Zone Control](http://www.usboiler.net/product/sage-zone-control-circulator-panel) panels and a specfic model of Honeywell thermostat ([TH9421C1004](https://customer.honeywell.com/en-US/Pages/Product.aspx?cat=HonECC+Catalog&pid=th9421c1004/U), now obsolete and not available for sale). Be careful connecting to this port as EnviraCom uses 24VAC signalling |
 | Black |  Modbus/RTU | API access, Boiler to Boiler communication over RS485 at 38.4kbps |
 
 Both ports are intended to daisy chain multiple controls/boilers together using a bus topology using splitters, e.g. http://www.l-com.com/ethernet-modular-tee-adapter-8x8m-8x8kf-8x8kf
