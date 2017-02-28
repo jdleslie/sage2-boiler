@@ -15,7 +15,7 @@ This code works nicely via a cron script (log_phant.py) for my ALP105BW-4T02, bu
 ### Boiler
 The boiler has two RJ45 ports
 
-1. 24V EnviraCom interface suitable for connection to Sage Zone Control panels (white)
+1. 24V [EnviraCom](http://www.google.com/patents/US20080112492) interface suitable for connection to [Sage Zone Control](http://www.usboiler.net/product/sage-zone-control-circulator-panel) panels (white)
 2. RS485 interface for Modbus/RTU communication between boilers (black)
 
 Both ports are intended to daisy chain multiple controls/boilers together using a bus topology using splitters, e.g. http://www.l-com.com/ethernet-modular-tee-adapter-8x8m-8x8kf-8x8kf
