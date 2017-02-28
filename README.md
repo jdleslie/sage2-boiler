@@ -10,7 +10,7 @@ This code works well via a cron script (log_phant.py) to log readings from my AL
 * Debug installation issues, e.g. short cycling
 * Track operation and usage
 
-## Prior Work
+## Reference and Prior Work
 * [Mini-Monitor](https://github.com/alanmitchell/mini-monitor/blob/master/readers/sage_boiler.py) contains a simpler [minimalmodbus](http://minimalmodbus.readthedocs.io/)-based API (minimalmodbus supports only Modbus/RTU)
 * [Sage2 Controller Modbus Interface Documentation](https://www.ccontrols.com/support/dp/Sage2.doc) (circa 2012)
 
