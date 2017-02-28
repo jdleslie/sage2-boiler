@@ -19,8 +19,10 @@ This code works well via a cron script (log_phant.py) to log readings from my AL
 ### Boiler
 The boiler has two RJ45 ports
 
-1. 24VAC [EnviraCom](http://www.google.com/patents/US20080112492) interface suitable for connection to [Sage Zone Control](http://www.usboiler.net/product/sage-zone-control-circulator-panel) panels (white)
-2. RS485 interface for Modbus/RTU communication between boilers (black) at 38.4kbps
+| Port  | Protocol | Purpose |
+|-------|----------|---------|
+| White | 24VAC [EnviraCom](http://www.google.com/patents/US20080112492) | Suitable for connection to [Sage Zone Control](http://www.usboiler.net/product/sage-zone-control-circulator-panel) panels and Honeywell Thermostats |
+| Black |  Modbus/RTU | API access, Boiler to Boiler communication over RS485 at 38.4kbps |
 
 Both ports are intended to daisy chain multiple controls/boilers together using a bus topology using splitters, e.g. http://www.l-com.com/ethernet-modular-tee-adapter-8x8m-8x8kf-8x8kf
 
