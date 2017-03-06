@@ -73,7 +73,7 @@ Demand (LL)                            0  Off
 DHW Priority Timer                     0  0.0                     sec
 Firing Rate (Measured)              2555  57                      %
 Firing Rate (Requested)             2537  57                      %
-Flame Signal                        1305  13.1                    A
+Flame Signal                        1305  13.1                    μA
 Header Sensor                        735  164.3                   F
 Header Sensor State                    1  Normal
 Outdoor Sensor                      -122  10.0                    F
