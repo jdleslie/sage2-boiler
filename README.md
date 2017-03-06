@@ -40,29 +40,56 @@ API contains a `__main__` that dumps current boiler state and illustrates usage:
 
 ```
 $ python sage_boiler.py localhost
-Reading                          Raw  Value                   Units
------------------------------  -----  ----------------------  -------
-Active System Operating Point    734  164.1                   F
-Active System Sensor               5  Header Sensor (S5)
-Active System Setpoint           737  164.7                   F
-Burner State                      12  Run
-Cycle Count (Boiler Pump)       2202  2202                    cycles
-Cycle Count (Burner)            4270  4270                    cycles
-Burner Run Time                 2735  2735                    hours
-Cycle Count (CH Pump)             78  78                      cycles
-Cycle Count (DHW Pump)           879  879                     cycles
-Demand (CH)                        1  On
-Demand (DHW)                       0  Off
-Demand (Frost)                     0  Off
-Firing Rate (Measured)          2382  53                      %
-Firing Rate (Requested)         2394  53                      %
-Header Sensor                    734  164.1                   F
-Outdoor Sensor                  -125  9.5                     F
-Pump Status (Boiler)             124  On, from burner demand
-Pump Status (CH)                 123  Off, not needed
-Pump Status (DHW)                123  Off, not needed
-Requested Rate (CH)             2394  53                      %
-Return Sensor                    719  161.4                   F
-Stack Sensor                     740  165.2                   F
-Supply Sensor                    790  174.2                   F
+Reading                              Raw  Value                   Units
+---------------------------------  -----  ----------------------  -------
+Active CH Hysteresis (off)            44  39.9                    F
+Active CH Hysteresis (on)             38  38.8                    F
+Active CH Operating Point            735  164.3                   F
+Active CH Setpoint                   734  164.1                   F
+Active DHW Hysteresis (off)           55  41.9                    F
+Active DHW Hysteresis (on)            38  38.8                    F
+Active DHW Operating Point           795  175.1                   F
+Active DHW Setpoint                  767  170.1                   F
+Active LL Operating Point           -400  -40                     F
+Active LL Sensor                       5  Header Sensor (S5)
+Active LL Setpoint                   777  171.9                   F
+Active Sensor (CH)                     5  Header Sensor (S5)
+Active Sensor (DHW)                    2  Outlet Sensor (S3S4)
+Active System Hysteresis (off)        44  39.9                    F
+Active System Hysteresis (on)         38  38.8                    F
+Active System Operating Point        735  164.3                   F
+Active System Sensor                   5  Header Sensor (S5)
+Active System Setpoint               734  164.1                   F
+Burner State                          12  Run
+Cycle Count (Boiler Pump)           2202  2202                    cycles
+Cycle Count (Burner)                4270  4270                    cycles
+Burner Run Time                     2735  2735                    hours
+Cycle Count (CH Pump)                 78  78                      cycles
+Cycle Count (DHW Pump)               879  879                     cycles
+Demand (CH)                            1  On
+Demand (DHW)                           0  Off
+Demand (Frost)                         0  Off
+Demand (LL)                            0  Off
+DHW Priority Timer                     0  0.0                     sec
+Firing Rate (Measured)              2555  57                      %
+Firing Rate (Requested)             2537  57                      %
+Flame Signal                        1305  13.1                    A
+Header Sensor                        735  164.3                   F
+Header Sensor State                    1  Normal
+Outdoor Sensor                      -122  10.0                    F
+Outdoor Sensor State                   1  Normal
+Pump Status (Boiler)                 124  On, from burner demand
+Pump Status (CH)                     123  Off, not needed
+Pump Status (DHW)                    123  Off, not needed
+4-20mA Remote Control Input State      2  Open
+Requested Rate (CH)                 2537  57                      %
+Return Sensor                        719  161.4                   F
+Return Sensor State                    1  Normal
+Setpoint Source (CH)                   3  Outdoor Reset Setpoint
+Setpoint Source (DHW)                  1  CH Setpoint
+Setpoint Source (LL)                   1  CH Setpoint
+Stack Sensor                         750  167                     F
+Stack Sensor State                     1  Normal
+Supply Sensor                        795  175.1                   F
+Supply Sensor State                    1  Normal
 ```
