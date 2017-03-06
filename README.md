@@ -34,3 +34,35 @@ The API works with either a directly connected serial interface (via [PySerial](
 
 ## Performance
 This API accesses the entire array of Modbus registers using a handful of Modbus reads and caches results with a configurable TTL. Reading and reporting all known registers takes a few hundred milliseconds.
+
+## Usage
+API contains a `__main__` that dumps current boiler state and illustrates usage:
+
+```
+$ python sage_boiler.py localhost
+Reading                          Raw  Value                   Units
+-----------------------------  -----  ----------------------  -------
+Active System Operating Point    734  164.1                   F
+Active System Sensor               5  Header Sensor (S5)
+Active System Setpoint           737  164.7                   F
+Burner State                      12  Run
+Cycle Count (Boiler Pump)       2202  2202                    cycles
+Cycle Count (Burner)            4270  4270                    cycles
+Burner Run Time                 2735  2735                    hours
+Cycle Count (CH Pump)             78  78                      cycles
+Cycle Count (DHW Pump)           879  879                     cycles
+Demand (CH)                        1  On
+Demand (DHW)                       0  Off
+Demand (Frost)                     0  Off
+Firing Rate (Measured)          2382  53                      %
+Firing Rate (Requested)         2394  53                      %
+Header Sensor                    734  164.1                   F
+Outdoor Sensor                  -125  9.5                     F
+Pump Status (Boiler)             124  On, from burner demand
+Pump Status (CH)                 123  Off, not needed
+Pump Status (DHW)                123  Off, not needed
+Requested Rate (CH)             2394  53                      %
+Return Sensor                    719  161.4                   F
+Stack Sensor                     740  165.2                   F
+Supply Sensor                    790  174.2                   F
+```
