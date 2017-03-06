@@ -94,3 +94,12 @@ Stack Sensor State                     1  Normal
 Supply Sensor                        795  175.1                   F
 Supply Sensor State                    1  Normal
 ```
+
+## Logging
+A trivial logging script that stores a subset of the available data using [data.sparkfun.com](https://data.sparkfun.com) is included in `log_phant.py`. This script can be run periodically by `cron`. As described in the source, create a `settings.py` file that sets three variables so the logging script sends data to the appropriate stream on data.sparkfun.com.
+
+For example, on a Linux host the user might issue `crontab -e` to edit their `crontab` and add the following line to log the state of the boiler ever minute:
+```
+* * * * * ~/sage2-boiler/log_phant.py
+```
+Be sure the required libraries listed in `requirements.txt` are installed and available
