@@ -553,7 +553,7 @@ if __name__ == '__main__':
     #import serial
     import sys
 
-    # Modbus/TCP bridge can be specific as an argument
+    # Modbus/TCP bridge can be specified as an argument
     host = len(sys.argv) == 2 and sys.argv[1] or 'localhost'
     boiler = Sage2Boiler(slave=1, host=host, port=502)
 
