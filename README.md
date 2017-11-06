@@ -4,7 +4,10 @@ This API facilitates access to much of the telemetry data produced by my [US Boi
  "Boiler to Boiler" RJ45 port. The built-in "Sage2" controller exposes nearly all the data available on the boiler's
 LCD display over this interface.
 
-This code works well via a cron script (log_phant.py) to log readings from my ALP105BW-4T02 to [data.sparkfun.com](http://data.sparkfun.com), but is untested on other models. A register-scanning routine is included to discover additional registers on other boilers.
+This has only been tested with my ALP105BW-4T02, but will probably work for other Sage2-era boilers. A 
+register-scanning routine is included to discover additional registers on other Sage2 versions and models.
+
+This code works well via a cron script (log_thingspeak.py) to log readings from my boiler to [thingspeak.com](http://thingspeak.com).
 
 ## Use Cases
 * Debug installation issues, e.g. short cycling
@@ -96,10 +99,12 @@ Supply Sensor State                    1  Normal
 ```
 
 ## Logging
-A trivial logging script that stores a subset of the available data using [data.sparkfun.com](https://data.sparkfun.com) is included in `log_phant.py`. This script can be run periodically by `cron`. As described in the source, create a `settings.py` file that sets three variables so the logging script sends data to the appropriate stream on data.sparkfun.com.
+A trivial logging script that stores a subset of the available data using [thingspeak.com](http://thingspeak.com)
+is included in `log_thingspeak.py`. This script can be run periodically by `cron`. As described in the source, create a `settings.py` file that sets the `CHANNEL_ID` and `WRITE_KEY` variables so the logging script sends data to 
+the appropriate stream (both values can be found on the "Channel Settings" tab in ThingSpeak.
 
 For example, on a Linux host the user might issue `crontab -e` to edit their `crontab` and add the following line to log the state of the boiler ever minute:
 ```
-* * * * * ~/sage2-boiler/log_phant.py
+* * * * * ~/sage2-boiler/log_thingspeak.py
 ```
 Be sure the required libraries listed in `requirements.txt` are installed and available
