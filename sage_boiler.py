@@ -550,7 +550,7 @@ class Sage2Boiler(object):
 
 
 if __name__ == '__main__':
-    #import serial
+    import serial
     import sys
 
     # Modbus/TCP bridge can be specified as an argument

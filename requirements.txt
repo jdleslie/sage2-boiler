@@ -2,3 +2,5 @@ modbus_tk
 cachetools
 tabulate
 requests
+pyserial
+thingspeak
