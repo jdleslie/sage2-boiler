@@ -16,6 +16,8 @@ This code works well via a cron script (log_thingspeak.py) to log readings from 
 ## Reference and Prior Work
 * [Mini-Monitor](https://github.com/alanmitchell/mini-monitor/blob/master/readers/sage_boiler.py) contains a simpler [minimalmodbus](http://minimalmodbus.readthedocs.io/)-based API (minimalmodbus supports only Modbus/RTU)
 * [Sage2 Controller Modbus Interface Documentation](https://www.ccontrols.com/support/dp/Sage2.doc) (circa 2012)
+* [Honeywell SOLA Modbus Inferface Specification](https://customer.honeywell.com/resources/Techlit/TechLitDocuments/65-0000s/65-0310.pdf)
+    * Found in excellent Mini-Monitor docs linked above!
 * [modbus-tk](https://github.com/ljean/modbus-tk) is a uniform Modbus RTU and TCP implementation in python
 
 ## Physical Interface
