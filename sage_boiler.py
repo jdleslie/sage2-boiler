@@ -42,8 +42,8 @@ class Sage2Reading(object):
         fmt = fmt or self.default_format
         return fmt.format(self=self)
 
-    def __unicode__(self):
-        return format(self)
+    #def __unicode__(self):
+    #    return format(self)
 
     def __str__(self):
         return normalize('NFKD', format(self)).encode('ascii', 'ignore')
@@ -64,18 +64,19 @@ class Sage2FiringRateReading(Sage2Reading):
     def value(self):
         "Returns firing rate as a percentage, expressed as a integer 0-100"
 
-        mask = 2**31
         raw_value = self.raw_value
+        value = raw_value & (2**15 - 1) # strip most significant bit
+        modulation_source = self.boiler.read(192, 1)
 
-        if raw_value & mask > 0:
-            # Once most significant bit is stripped the remainder of register
-            # is in tenths of a percent
-            value = (raw_value - mask) / 10.0
+        if (raw_value >> 15 == modulation_source):
+            if modulation_source == 0:     # RPM
+                max_rpm = self.boiler.read(193, 1)
+                min_rpm = self.boiler.read(195, 1)
+                value = 100.0 * value / (max_rpm)
+            elif modulation_source == 1:   # 0-10V
+                value = value / 10.0
         else:
-            # Magic register containing maximum modulation rate
-            max_rpm = self.boiler.read(193, 1)
-            value = 100.0 * raw_value / max_rpm
-
+            value = 0
         return int(value)
 
 class Sage2TemperatureReading(Sage2Reading):
@@ -92,11 +93,25 @@ class Sage2TemperatureReading(Sage2Reading):
         # to be signed, as described at:
         #
         # http://github.com/alanmitchell/mini-monitor/blob/master/readers/sage_boiler.py
-        return temperature > 2**15 and temperature - 2**16 or temperature
+        #return temperature > 2**15 and temperature - 2**16 or temperature
+        if temperature > 2**15:
+            self.offset = -2**16
+        return temperature
 
 class Sage2FlameSignalReading(Sage2Reading):
     multiplier = 0.01
     units = u'\N{MICRO SIGN}A'
+
+class Sage2ModulationReading(Sage2Reading):
+    @property
+    def raw_value(self):
+        modulation = super(Sage2ModulationReading, self).raw_value
+        if modulation < 2**15:
+            self.units = 'rpm'
+        else:
+            self.units = '%'
+            self.offset = -2**15
+        return modulation
 
 class Sage2EnumeratedReading(Sage2Reading):
     default_format = '{self.title}: {self.value}'
@@ -104,6 +119,7 @@ class Sage2EnumeratedReading(Sage2Reading):
 
     @property
     def raw_value(self):
+        from functools import reduce
         "Returns largest matching key within enumeration of possible values"
         raw_value = super(Sage2EnumeratedReading, self).raw_value
         largest_match = lambda x, y: y <= raw_value and y or x
@@ -229,6 +245,7 @@ class Sage2Boiler(object):
     def __init__(self, slave=1, host='localhost', port=502, serial=None):
         self.cache = TTLCache(maxsize=128, ttl=10)
         self.__slave = slave
+        self.boiler = slave
 
         if serial:
             self.__master = RtuMaster(serial)
@@ -261,11 +278,11 @@ class Sage2Boiler(object):
 
         return tabulate(readings(), headers=['Reading', 'Raw', 'Value', 'Units'])
 
-    def __unicode__(self):
-        return self.tabulate()
+    #def __unicode__(self):
+    #    return self.tabulate()
 
     def __str__(self):
-        return normalize('NFKD', unicode(self)).encode('ascii', 'ignore')
+        return normalize('NFKD', self.tabulate()) #.encode('ascii', 'ignore')
 
     def read(self, register, count=1):
         assert count <= 2 and count > 0
@@ -292,10 +309,10 @@ class Sage2Boiler(object):
         function_code = cst.READ_HOLDING_REGISTERS # aka "3"
         get = partial(self.__master.execute, *[self.__slave, function_code])
 
-        # Hardcoded register extract for registers 0-177 and 193
+        # Hardcoded register extract for registers 0-177 and 192-209
         #
         # N.B. Up to 125 registers that can be retrieved in a single request
-        return get(0, 100) + get(100, 77) + (None,) * 16 + get(193, 1)
+        return get(0, 100) + get(100, 77) + (None,) * 15 + get(192, 36)
 
     def identify_valid_registers(self, min, max):
         from operator import itemgetter
@@ -312,10 +329,10 @@ class Sage2Boiler(object):
         # clever recipe: https://docs.python.org/2.6/library/itertools.html#examples
         ranges = []
         data = register_walk()
-        for k, g in groupby(enumerate(data), lambda (i,x):i-x):
-            group = map(itemgetter(1), g)
-            ranges.append((group[0], group[-1],))
-        return ranges
+        #for k, g in groupby(enumerate(data), lambda (i,x): i-x):
+        #    group = map(itemgetter(1), g)
+        #    ranges.append((group[0], group[-1],))
+        #return ranges
         # Results for scanning registers 0-10000 on my ALP105 boiler
         # [(0, 182), (188, 1122), (1126, 1128), (1132, 1134), (1138, 1140),
         #  (1144, 1146), (1150, 1152), (1156, 1158), (1162, 1164), (1168, 1170),
@@ -330,11 +347,11 @@ class Sage2Boiler(object):
 
     @property
     def firing_rate_requested(self):
-        return Sage2FiringRateReading(self, 8, 'Firing Rate (Requested)', summary=True)
+        return Sage2FiringRateReading(self, 8, 'Firing Rate (Actual)', summary=True)
 
     @property
-    def firing_rate_measured(self):
-        return Sage2FiringRateReading(self, 9, 'Firing Rate (Measured)', summary=True)
+    def fan_speed(self):
+        return Sage2Reading(self, 9, 'Fan Speed (Requested)', 'rpm', summary=True)
 
     @property
     def flame_signal(self):
@@ -489,6 +506,10 @@ class Sage2Boiler(object):
     def active_dhw_off_hysteresis(self):
         return Sage2TemperatureReading(self, 89, 'Active DHW Hysteresis (off)')
 
+    @property
+    def dhw_storage_time(self):
+        return Sage2Reading(self, 90, 'DHW Storage Time', 's')
+
     # PUMP STATUS
     @property
     def pump_status_ch(self):
@@ -541,6 +562,35 @@ class Sage2Boiler(object):
     def outdoor_sensor_state(self):
         return Sage2SensorStateReading(self, 171, 'Outdoor Sensor State')
 
+    @property
+    def modulation_output(self):
+        return Sage2Reading(self,192, 'Modulation Output', 'enum', summary=False)
+
+    @property
+    def max_ch_rate(self):
+        return Sage2ModulationReading(self, 193, 'Maximum rate (CH)', summary=True)
+
+    @property
+    def max_dhw_rate(self):
+        return Sage2ModulationReading(self, 194, 'Maximum rate (DHW)', summary=True)
+
+    @property
+    def min_rate(self):
+        return Sage2ModulationReading(self, 195, 'Minimum rate', summary=True)
+
+    @property
+    def p_gain_ch(self):
+        return Sage2Reading(self, 216, 'CH P-gain', 'gain', summary=False)
+
+    @property
+    def i_gain_ch(self):
+        return Sage2Reading(self, 217, 'CH I-gain', 'gain', summary=False)
+
+    @property
+    def d_gain_ch(self):
+        return Sage2Reading(self, 218, 'CH D-gain', 'gain', summary=False)
+
+
 #    Implement this function. PRs welcome!
 #
 #    @property
@@ -557,4 +607,4 @@ if __name__ == '__main__':
     host = len(sys.argv) == 2 and sys.argv[1] or 'localhost'
     boiler = Sage2Boiler(slave=1, host=host, port=502)
 
-    print boiler
+    print(boiler.tabulate(summary=True))
