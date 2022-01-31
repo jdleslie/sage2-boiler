@@ -93,10 +93,7 @@ class Sage2TemperatureReading(Sage2Reading):
         # to be signed, as described at:
         #
         # http://github.com/alanmitchell/mini-monitor/blob/master/readers/sage_boiler.py
-        #return temperature > 2**15 and temperature - 2**16 or temperature
-        if temperature > 2**15:
-            self.offset = -2**16
-        return temperature
+        return temperature if temperature < 2**15 else temperature - 2**16
 
 class Sage2FlameSignalReading(Sage2Reading):
     multiplier = 0.01
@@ -248,10 +245,10 @@ class Sage2Boiler(object):
         self.boiler = slave
 
         if serial:
-            self.__master = RtuMaster(serial)
+            self.__master = RtuMaster(serial, t0=0.01)
         else:
             self.__master = TcpMaster(host, port)
-        #self.__master.set_verbose(True)
+	#self.__master.set_verbose(True)
 
     def tabulate(self, summary=True):
         import inspect
@@ -544,6 +541,14 @@ class Sage2Boiler(object):
     def counter_boiler_pump(self):
         return Sage2CounterReading(self, 138, 'Cycle Count (Boiler Pump)', 'cycles', summary=True)
 
+    @property
+    def counter_controller(self):
+        return Sage2CounterReading(self, 142, 'Cycle Count (Controller)', 'cycles', summary=True)
+
+    @property
+    def counter_controller_hours(self):
+        return Sage2CounterReading(self, 144, 'Controller Run Time', 'hours', summary=True)
+
     # LEAD LAG STATUS
     @property
     def setpoint_source_ll(self):
@@ -560,7 +565,7 @@ class Sage2Boiler(object):
 
     @property
     def outdoor_sensor_state(self):
-        return Sage2SensorStateReading(self, 171, 'Outdoor Sensor State')
+        return Sage2SensorStateReading(self, 171, 'Outdoor Sensor State', summary=False)
 
     @property
     def modulation_output(self):

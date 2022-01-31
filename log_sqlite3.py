@@ -3,10 +3,20 @@
 import numbers
 import sqlite3
 import sys
+import os.path
 
 import sage_boiler
 
-boiler = sage_boiler.Sage2Boiler(1, sys.argv[1])
+boiler = None
+if os.path.exists(sys.argv[1]):
+	import serial
+	serial_port=serial.Serial(port=sys.argv[1], baudrate=38400)
+	boiler = sage_boiler.Sage2Boiler(1, serial=serial_port)
+else:
+	boiler = sage_boiler.Sage2Boiler(1, sys.argv[1])
+
+
+
 readings = []
 for key in dir(boiler):
 	this = getattr(boiler, key)
