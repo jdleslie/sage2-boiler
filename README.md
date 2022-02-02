@@ -104,8 +104,12 @@ Supply Sensor State                    1  Normal
 A trivial logging script that stores a subset of the available data using SQLite3
 is included in `log_sqlite3.py`. This script can be run periodically by `cron`.
 
-For example, on a Linux host the user might issue `crontab -e` to edit their `crontab` and add the following line to log the state of the boiler ever minute:
+For example, on a Linux host the user might issue `crontab -e` to edit their `crontab` and add the following line to log the state of the boiler every minute:
 ```
 * * * * * ~/sage2-boiler/log_sqlite3.py
 ```
 Be sure the required libraries listed in `requirements.txt` are installed and available
+
+Alternatively, `log_influxdb.py` logs all of the available data to an InfluxDB instance.
+Run `log_influxdb.py --help` for a list of options. It also requires the InfluxDB python
+client library; see the script header comment for details.
