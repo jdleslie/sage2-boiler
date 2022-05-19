@@ -30,6 +30,8 @@ parser.add_argument(
 parser.add_argument(
     "--influx_measurement", default="alpine", help="InfluxDB measurement name."
 )
+parser.add_argument("--influx_token", default="", help="InfluxDB API token.")
+parser.add_argument("--influx_org", default="", help="InfluxDB org.")
 parser.add_argument(
     "--include_raw", default=True, help="Also log raw values under [measurement]_raw."
 )
@@ -95,8 +97,8 @@ def _get_boiler(args) -> Sage2Boiler:
 def _get_influxdb(args) -> InfluxDBClient:
     return InfluxDBClient(
         url=f"http://{args.influx_host}:{args.influx_port}",
-        token="",
-        org="",
+        token=args.influx_token,
+        org=args.influx_org,
         timeout=1000 * 60 * 10,
     )
 
